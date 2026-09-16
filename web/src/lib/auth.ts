@@ -1,0 +1,22 @@
+const TOKEN_KEY = "xanders_jwt";
+
+export const saveToken = (token: string): void => {
+    if (typeof window !== "undefined") {
+        localStorage.setItem(TOKEN_KEY, token);
+    }
+};
+
+export const getToken = (): string | null => {
+    if (typeof window !== "undefined") {
+        return localStorage.getItem(TOKEN_KEY);
+    }
+    return null;
+};
+
+export const removeToken = (): void => {
+    if (typeof window !== "undefined") {
+        localStorage.removeItem(TOKEN_KEY);
+    }
+};
+
+export const isLoggedIn = (): boolean => !!getToken();
