@@ -40,16 +40,30 @@ const getStoredTheme = (): Theme =>
 const getStoredLanguage = () => localStorage.getItem("lang") ?? "en";
 
 export function AppProvider({ children }: { children: ReactNode }) {
-	const storedToken = useSyncExternalStore(subscribeToStorage, getToken, () => null);
+	const storedToken = useSyncExternalStore(
+		subscribeToStorage,
+		getToken,
+		() => null,
+	);
 	const storedTheme = useSyncExternalStore<Theme>(
 		subscribeToStorage,
 		getStoredTheme,
 		() => "dark",
 	);
-	const storedLanguage = useSyncExternalStore(subscribeToStorage, getStoredLanguage, () => "en");
-	const [themeOverride, setThemeOverride] = useState<Theme | undefined>(undefined);
-	const [languageOverride, setLanguageOverride] = useState<string | undefined>(undefined);
-	const [tokenOverride, setTokenOverride] = useState<string | null | undefined>(undefined);
+	const storedLanguage = useSyncExternalStore(
+		subscribeToStorage,
+		getStoredLanguage,
+		() => "en",
+	);
+	const [themeOverride, setThemeOverride] = useState<Theme | undefined>(
+		undefined,
+	);
+	const [languageOverride, setLanguageOverride] = useState<string | undefined>(
+		undefined,
+	);
+	const [tokenOverride, setTokenOverride] = useState<string | null | undefined>(
+		undefined,
+	);
 	const theme = themeOverride ?? storedTheme;
 	const lang = languageOverride ?? storedLanguage;
 	const token = tokenOverride === undefined ? storedToken : tokenOverride;
@@ -59,7 +73,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 	const { data: userResponse, isLoading } = useQuery({
 		queryKey: ["user", token],
 		queryFn: () => api.getMe(token!),
-		enabled: !!token && pathname !== "/login", // Only fetch user if token exists and not on login page
+		enabled: !!token && pathname !== "/login" && pathname !== "/register", // Only fetch user if token exists and not on login or register page
 		retry: false, // Don't retry auth errors
 	});
 
